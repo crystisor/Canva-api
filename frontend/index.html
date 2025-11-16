@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canva Auth Example</title>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding-top: 50px; }
+    #connect-btn { font-size: 1.2em; padding: 10px 20px; }
+    #result { margin-top: 30px; word-wrap: break-word; }
+  </style>
+</head>
+<body>
+  <h1>Canva Connect API Authentication</h1>
+  <button id="connect-btn">Connect to Canva</button>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('connect-btn').addEventListener('click', () => {
+      fetch('http://localhost:3001/auth')
+        .then(response => response.json())
+        .then(data => {
+          window.location.href = data.authUrl;
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          document.getElementById('result').innerText = 'Error starting authentication.';
+        });
+    });
+
+    window.onload = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessToken = urlParams.get('access_token');
+      const refreshToken = urlParams.get('refresh_token');
+
+      if (accessToken) {
+        document.getElementById('result').innerHTML = `
+          <h2>Authentication Successful!</h2>
+          <p><strong>Access Token:</strong> ${accessToken}</p>
+          <p><strong>Refresh Token:</strong> ${refreshToken}</p>
+        `;
+      }
+    };
+  </script>
+</body>
+</html>
